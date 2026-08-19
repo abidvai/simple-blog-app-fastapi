@@ -20,7 +20,18 @@ pipeline {
 
         stage('Test') {
             steps {
-                sh '.venv/bin/pytest'
+                withCredentials([
+                    string(
+                        credentialsId: 'ci-database-url',
+                        variable: 'DATABASE_URL'
+                    ),
+                    string(
+                     credentialsId: 'ci-secret-key',
+                     variable: 'SECRET_KEY'   
+                    )
+                ]){
+                    sh '.venv/bin/pytest'
+                }
             }
         }
 
