@@ -7,16 +7,20 @@ pipeline {
                 checkout scm
             }
         }
-        stage('Build') {
+
+        stage('Setup Environment') {
             steps {
-                echo 'Building application...'
+                sh '''
+                python3 -m venv .venv
+                .venv/bin/python -m pip install --upgrade pip
+                .venv/bin/pip install -r requirements.txt
+                '''
             }
         }
 
         stage('Test') {
             steps {
-                sh 'pip3 install -r requirements.txt'
-                sh 'pytest'
+                sh '.venv/bin/pytest'
             }
         }
 
