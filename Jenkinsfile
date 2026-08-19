@@ -11,12 +11,12 @@ pipeline {
         stage('Setup Environment') {
             steps {
                 sh '''
-                python3 --version
-                which python3
+                python3.13 --version
+                which python3.13
 
-                python3 -m venv .venv
-        .venv/bin/python --version
-                python3 -m venv .venv
+                python3.13 -m venv .venv
+                .venv/bin/python --version
+                python3.13 -m venv .venv
                 .venv/bin/python -m pip install --upgrade pip
                 .venv/bin/pip install -r requirements.txt
                 '''
