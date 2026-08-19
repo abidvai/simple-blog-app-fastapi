@@ -11,13 +11,14 @@ pipeline {
         stage('Setup Environment') {
             steps {
                 sh '''
-                python3.13 --version
-                which python3.13
+                /Library/Frameworks/Python.framework/Versions/3.13/bin/python3.13 --version
 
-                python3.13 -m venv .venv
+                /Library/Frameworks/Python.framework/Versions/3.13/bin/python3.13 -m venv .venv
+
                 .venv/bin/python --version
-                python3.13 -m venv .venv
+
                 .venv/bin/python -m pip install --upgrade pip
+
                 .venv/bin/pip install -r requirements.txt
                 '''
             }
@@ -31,14 +32,13 @@ pipeline {
                         variable: 'DATABASE_URL'
                     ),
                     string(
-                     credentialsId: 'ci-secret-key',
-                     variable: 'SECRET_KEY'   
+                        credentialsId: 'ci-secret-key',
+                        variable: 'SECRET_KEY'
                     )
-                ]){
+                ]) {
                     sh '.venv/bin/pytest'
                 }
             }
         }
-
     }
 }
