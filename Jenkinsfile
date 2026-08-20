@@ -1,6 +1,19 @@
 pipeline {
     agent any
 
+    parameters {
+        choice(
+            name: 'ENVIRONMENT',
+            choices: ['staging', 'production'],
+            description: 'Where should this pipeline run?'
+        )
+        booleanParam(
+            name: 'RUN_TESTS',
+            defaultValue: true,
+            description: 'Run tests?'
+        )
+    }
+
     triggers {
         githubPush()
     }
@@ -29,6 +42,11 @@ pipeline {
         }
 
         stage('Test') {
+            when {
+                expression {
+                    params.RUN_TESTS
+                }
+            }
             steps {
                 withCredentials([
                     string(
@@ -42,6 +60,12 @@ pipeline {
                 ]) {
                     sh '.venv/bin/pytest'
                 }
+            }
+        }
+
+    stage('Show Environment') {
+        steps {
+            echo "Deploying to: ${params.ENVIRONMENT}"
             }
         }
     }
